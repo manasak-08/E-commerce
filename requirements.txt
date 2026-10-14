@@ -1,0 +1,6 @@
+Flask==3.1.2
+flask-cors==6.0.1
+reportlab==5.0.1
+qrcode==8.2
+pillow==12.3.0
+werkzeug==3.1.9

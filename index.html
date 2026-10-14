@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ManChi's | Luxury Fashion & Lifestyle</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Top Announcement Strip -->
+    <div class="announcement-strip">
+        <div class="container strip-content">
+            <div class="strip-item">
+                <i class="fa-solid fa-sparkles text-primary"></i> Festive Sale is LIVE! Up to 50% OFF with code <b>FESTIVAL50</b>
+            </div>
+            <div class="strip-item">
+                <i class="fa-solid fa-truck-fast"></i> Free Express Shipping on orders over ₹499
+            </div>
+            <div class="strip-item d-none d-md-block">
+                <i class="fa-solid fa-gift"></i> Earn 5% Reward Points on every order!
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="main-header">
+        <div class="container header-container">
+            <!-- Brand Logo -->
+            <a href="#" class="brand-logo" onclick="navigateTo('home'); return false;">
+                <img src="ManChi's Logo.png" alt="ManChi's Logo" class="logo-img">
+            </a>
+
+            <!-- Search Bar -->
+            <div class="header-search">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="globalSearchInput" placeholder="Search kurtas, sarees, dresses, beauty..." onkeyup="handleSearch(event)">
+                <button type="button" class="search-btn" onclick="executeSearch()"><i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="nav-menu" id="mainNavMenu">
+                <a href="#" class="nav-link active" onclick="navigateTo('home'); return false;">Home</a>
+                <a href="#" class="nav-link" onclick="navigateTo('shop'); return false;">Shop All</a>
+                <a href="#" class="nav-link" onclick="filterByDealType('Festival'); return false;">Festival Deals</a>
+                <a href="#" class="nav-link" onclick="navigateTo('combos'); return false;">Combo Deals</a>
+                <a href="#aboutSection" class="nav-link" onclick="scrollToAbout(); return false;">About</a>
+            </nav>
+
+            <!-- Action Controls -->
+            <div class="header-actions">
+                <!-- Dedicated Admin Portal Link Button -->
+                <a href="/admin" class="btn btn-outline btn-sm" title="Open Dedicated Admin Portal" style="border-radius: 20px; font-size: 0.78rem; padding: 5px 12px;">
+                    <i class="fa-solid fa-shield-halved text-primary"></i> Admin Portal
+                </a>
+
+                <!-- Track Order Quick Button -->
+                <button class="icon-btn" onclick="openTrackOrderModal()" title="Track Order">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span class="action-label">Track</span>
+                </button>
+
+                <!-- Reward Points Pill (Visible for Logged In User) -->
+                <div id="rewardPointsPill" class="reward-pill d-none" title="Your Available Reward Points">
+                    <i class="fa-solid fa-award"></i>
+                    <span id="rewardPointsCount">0</span> Pts
+                </div>
+
+                <!-- Customer Cart Button (STRICTLY HIDDEN FOR ADMIN) -->
+                <button id="cartBtn" class="icon-btn cart-btn" onclick="toggleCartDrawer()" title="View Cart">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span class="cart-badge" id="cartCountBadge">0</span>
+                    <span class="action-label">Bag</span>
+                </button>
+
+                <!-- User Account / Login Button -->
+                <div class="user-menu-container">
+                    <button class="user-profile-btn" id="userMenuBtn" onclick="toggleUserDropdown()">
+                        <div class="avatar-circle" id="userAvatar"><i class="fa-regular fa-user"></i></div>
+                        <span class="user-name-text" id="userNameDisplay">Sign In</span>
+                        <i class="fa-solid fa-chevron-down caret-icon"></i>
+                    </button>
+                    <!-- Dropdown Menu -->
+                    <div class="user-dropdown" id="userDropdown">
+                        <div id="guestDropdownItems">
+                            <div class="dropdown-header">
+                                <p class="mb-0 text-muted small">Welcome Shopper</p>
+                                <p class="fw-bold mb-0">Customer Account</p>
+                            </div>
+                            <button class="dropdown-item primary-item" onclick="openAuthModal('login')">
+                                <i class="fa-solid fa-arrow-right-to-bracket"></i> Customer Login
+                            </button>
+                            <button class="dropdown-item" onclick="openAuthModal('register')">
+                                <i class="fa-solid fa-user-plus"></i> Customer Register (100 Pts)
+                            </button>
+                            <div class="dropdown-divider"></div>
+                            <a href="/admin" class="dropdown-item text-primary">
+                                <i class="fa-solid fa-shield-halved"></i> Admin Portal Page
+                            </a>
+                        </div>
+                        <div id="userDropdownItems" class="d-none">
+                            <div class="dropdown-header">
+                                <p class="mb-0 text-muted small">Customer Account</p>
+                                <p class="fw-bold mb-0 text-primary" id="dropdownUserEmail">user@manchis.com</p>
+                                <div class="points-indicator mt-1">
+                                    <i class="fa-solid fa-coins text-warning"></i> Rewards: <b id="dropdownPointsVal">0</b> Points
+                                </div>
+                            </div>
+                            <button class="dropdown-item" onclick="navigateTo('orders')">
+                                <i class="fa-solid fa-box-archive"></i> My Orders & Bills
+                            </button>
+                            <button class="dropdown-item" onclick="openTrackOrderModal()">
+                                <i class="fa-solid fa-truck-ramp-box"></i> Track Any Order
+                            </button>
+                            <div class="dropdown-divider"></div>
+                            <a href="/admin" class="dropdown-item text-primary">
+                                <i class="fa-solid fa-shield-halved"></i> Admin Portal
+                            </a>
+                            <button class="dropdown-item text-danger" onclick="logoutUser()">
+                                <i class="fa-solid fa-right-from-bracket"></i> Logout
+                            </button>
+                        </div>
+                        <div id="adminDropdownItems" class="d-none">
+                            <div class="dropdown-header">
+                                <span class="badge badge-admin">ADMINISTRATOR</span>
+                                <p class="fw-bold mb-0 mt-1" id="dropdownAdminName">Admin Portal</p>
+                            </div>
+                            <a href="/admin" class="dropdown-item admin-highlight">
+                                <i class="fa-solid fa-gauge-high"></i> Go to Admin Page
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <button class="dropdown-item text-danger" onclick="logoutUser()">
+                                <i class="fa-solid fa-right-from-bracket"></i> Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Navigation Strip (Shown ONLY when Admin is logged in) -->
+    <div id="adminTopBar" class="admin-topbar d-none">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="admin-topbar-left">
+                <span class="badge badge-admin"><i class="fa-solid fa-shield-halved"></i> ADMIN CONTROL CENTER</span>
+                <span class="ms-3 text-white small">Cart and customer bag are disabled in Admin view.</span>
+            </div>
+            <div class="admin-topbar-nav">
+                <button class="admin-nav-link active" onclick="switchAdminTab('products')"><i class="fa-solid fa-shirt"></i> Products</button>
+                <button class="admin-nav-link" onclick="switchAdminTab('combos')"><i class="fa-solid fa-layer-group"></i> Combos</button>
+                <button class="admin-nav-link" onclick="switchAdminTab('coupons')"><i class="fa-solid fa-ticket"></i> Offers/Coupons</button>
+                <button class="admin-nav-link" onclick="switchAdminTab('orders')"><i class="fa-solid fa-cart-flatbed"></i> Orders & Tracking</button>
+                <button class="admin-nav-link" onclick="switchAdminTab('users')"><i class="fa-solid fa-users"></i> Users</button>
+                <button class="admin-nav-link exit-btn" onclick="navigateTo('home')"><i class="fa-solid fa-store"></i> View Storefront</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Coupon Ticker Strip -->
+    <div class="coupon-ticker-bar" id="couponTickerBar">
+        <div class="container ticker-container">
+            <span class="ticker-tag"><i class="fa-solid fa-tags"></i> TOP OFFERS</span>
+            <div class="ticker-items" id="tickerItemsContainer">
+                <!-- Injected via JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- MAIN CONTENT CONTAINERS -->
+    <!-- ============================================================== -->
+    <main class="main-content">
+
+        <!-- 1. HOME VIEW -->
+        <section id="homeView" class="view-section active">
+            <!-- Hero Banner Section -->
+            <div class="hero-section">
+                <div class="container hero-container">
+                    <div class="hero-content">
+                        <span class="hero-tag"><i class="fa-solid fa-crown"></i> Autumn / Festive Collection 2026</span>
+                        <h1 class="hero-title">Timeless Luxury, Modern Elegance.</h1>
+                        <p class="hero-subtitle">Discover handcrafted ethnic wear, effortless casual ensembles, designer accessories and premium beauty curated for the discerning individual.</p>
+                        <div class="hero-actions">
+                            <button class="btn btn-primary btn-lg" onclick="navigateTo('shop')">
+                                <i class="fa-solid fa-bag-shopping"></i> Shop Now
+                            </button>
+                            <button class="btn btn-outline btn-lg" onclick="scrollToDeals()">
+                                <i class="fa-solid fa-fire"></i> Explore Special Deals
+                            </button>
+                        </div>
+                        <div class="hero-stats">
+                            <div class="stat-box">
+                                <span class="stat-number">500+</span>
+                                <span class="stat-label">Designer Styles</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-number">4.9 ★</span>
+                                <span class="stat-label">Customer Rating</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-number">2-Day</span>
+                                <span class="stat-label">Fast Delivery</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero-visual">
+                        <div class="hero-card-main">
+                            <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&auto=format&fit=crop&q=80" alt="ManChi's Collection" class="hero-img">
+                            <div class="hero-floating-badge badge-top">
+                                <i class="fa-solid fa-sparkles text-primary"></i> <b>Festive Edit</b> 40% OFF
+                            </div>
+                            <div class="hero-floating-badge badge-bottom">
+                                <i class="fa-solid fa-award text-warning"></i> Verified Handcrafted
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Value Proposition Features -->
+            <div class="container value-props-container">
+                <div class="row g-3">
+                    <div class="col-md-3 col-6">
+                        <div class="prop-card">
+                            <div class="prop-icon"><i class="fa-solid fa-truck-fast"></i></div>
+                            <div>
+                                <h6 class="prop-title">Prompt Delivery</h6>
+                                <p class="prop-desc">Reliable live tracking & safe courier</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="prop-card">
+                            <div class="prop-icon"><i class="fa-solid fa-shield-heart"></i></div>
+                            <div>
+                                <h6 class="prop-title">100% Authentic</h6>
+                                <p class="prop-desc">Handpicked artisanal fabrics</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="prop-card">
+                            <div class="prop-icon"><i class="fa-solid fa-award"></i></div>
+                            <div>
+                                <h6 class="prop-title">Reward Points</h6>
+                                <p class="prop-desc">Earn 5% back on every purchase</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="prop-card">
+                            <div class="prop-icon"><i class="fa-solid fa-rotate-left"></i></div>
+                            <div>
+                                <h6 class="prop-title">Easy 7-Day Return</h6>
+                                <p class="prop-desc">Hassle-free instant exchanges</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Showcase Grid -->
+            <div class="container section-padding">
+                <div class="section-header text-center">
+                    <span class="section-tag">EXPLORE COLLECTIONS</span>
+                    <h2 class="section-title">Shop by Category</h2>
+                    <p class="section-subtitle">Find your statement style curated specifically for your lifestyle</p>
+                </div>
+                <div class="category-grid">
+                    <div class="cat-card" onclick="filterByCategory('Women')">
+                        <img src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=600&auto=format&fit=crop&q=80" alt="Women">
+                        <div class="cat-overlay">
+                            <h3>Women's Fashion</h3>
+                            <span>Lehengas, Anarkalis, Sarees & Chic Western</span>
+                            <button class="cat-btn">Explore Women <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                    <div class="cat-card" onclick="filterByCategory('Men')">
+                        <img src="https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=600&auto=format&fit=crop&q=80" alt="Men">
+                        <div class="cat-overlay">
+                            <h3>Men's Fashion</h3>
+                            <span>Raw Silk Kurtas, Bandhgalas & Casual Linens</span>
+                            <button class="cat-btn">Explore Men <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                    <div class="cat-card" onclick="filterByCategory('Accessories')">
+                        <img src="https://images.unsplash.com/photo-1630019852942-f89202989a59?w=600&auto=format&fit=crop&q=80" alt="Accessories">
+                        <div class="cat-overlay">
+                            <h3>Accessories</h3>
+                            <span>Kundan Jewelry, Potlis & Quilted Bags</span>
+                            <button class="cat-btn">Explore Accessories <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                    <div class="cat-card" onclick="filterByCategory('Beauty & Health')">
+                        <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=600&auto=format&fit=crop&q=80" alt="Beauty">
+                        <div class="cat-overlay">
+                            <h3>Beauty & Health</h3>
+                            <span>Ayurvedic Elixirs, Rose Gold Serums & Tints</span>
+                            <button class="cat-btn">Explore Beauty <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Requirement 1: DEAL TYPES SHOWCASE & INTERACTIVE FILTER -->
+            <div id="dealTypesSection" class="deal-types-section">
+                <div class="container">
+                    <div class="section-header text-center">
+                        <span class="section-tag"><i class="fa-solid fa-tag"></i> CURATED STYLES & OFFERS</span>
+                        <h2 class="section-title">Shop by Deal Type</h2>
+                        <p class="section-subtitle">Discover curated collections tailored for celebrations, everyday comfort, and high-value combo bundles</p>
+                    </div>
+
+                    <!-- Deal Type Filter Pills -->
+                    <div class="deal-pill-nav">
+                        <button class="deal-pill active" onclick="selectDealTypeTab('all')">
+                            <i class="fa-solid fa-border-all"></i> All Deals
+                        </button>
+                        <button class="deal-pill" onclick="selectDealTypeTab('Casual')">
+                            <i class="fa-solid fa-mug-hot"></i> Casual
+                        </button>
+                        <button class="deal-pill" onclick="selectDealTypeTab('Ethnic')">
+                            <i class="fa-solid fa-feather"></i> Ethnic
+                        </button>
+                        <button class="deal-pill" onclick="selectDealTypeTab('Festival')">
+                            <i class="fa-solid fa-sparkles"></i> Festival
+                        </button>
+                        <button class="deal-pill" onclick="selectDealTypeTab('Special Deals')">
+                            <i class="fa-solid fa-fire"></i> Special Deals
+                        </button>
+                        <button class="deal-pill" onclick="selectDealTypeTab('Combo Deals')">
+                            <i class="fa-solid fa-layer-group"></i> Combo Deals
+                        </button>
+                    </div>
+
+                    <!-- Compact Product Grid for Deals -->
+                    <div class="product-grid" id="homeDealsGrid">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button class="btn btn-secondary btn-lg" onclick="navigateTo('shop')">
+                            View All Products in Catalog <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Special Combo Deals Section -->
+            <div class="combo-deals-banner-section section-padding">
+                <div class="container">
+                    <div class="combo-banner-header d-flex justify-content-between align-items-end mb-4">
+                        <div>
+                            <span class="section-tag text-white">MAXIMUM VALUE</span>
+                            <h2 class="section-title text-white mb-1">Exclusive Combo Deals</h2>
+                            <p class="text-white-50 mb-0">Stylist-matched complete looks bundled at unbeatable prices</p>
+                        </div>
+                        <button class="btn btn-light" onclick="navigateTo('combos')">
+                            View All Combos <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div class="combos-grid" id="homeCombosGrid">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Coupons & Offers Section -->
+            <div class="container section-padding">
+                <div class="section-header text-center">
+                    <span class="section-tag"><i class="fa-solid fa-percent"></i> SAVINGS VAULT</span>
+                    <h2 class="section-title">Exclusive Store Coupons</h2>
+                    <p class="section-subtitle">Apply these discount codes at checkout to unlock instant discounts</p>
+                </div>
+                <div class="coupons-grid" id="homeCouponsGrid">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+            <!-- About ManChi's Section -->
+            <div id="aboutSection" class="about-section">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="about-badge"><i class="fa-solid fa-gem"></i> THE MANCHI'S HERITAGE</div>
+                            <h2 class="about-title">Crafting Everyday Elegance & Festive Grandeur</h2>
+                            <p class="about-text">
+                                Founded with an unwavering passion for bespoke craftsmanship, <b>ManChi's</b> merges traditional Indian artistry with contemporary silhouettes. From intricately hand-embroidered Anarkalis and rich Chanderi silks to refined modern casuals and artisanal beauty elixirs, each piece in our atelier is created to inspire confidence and sophistication.
+                            </p>
+                            <p class="about-text">
+                                We believe luxury fashion should be accompanied by transparent pricing, swift delivery with end-to-end order tracking, and rewarding customer experiences with our bespoke loyalty points program.
+                            </p>
+                            <div class="about-highlights">
+                                <div class="highlight-item"><i class="fa-solid fa-check text-primary"></i> 100% Genuine Handlooms</div>
+                                <div class="highlight-item"><i class="fa-solid fa-check text-primary"></i> Eco-Conscious Packaging</div>
+                                <div class="highlight-item"><i class="fa-solid fa-check text-primary"></i> QR-Verified Tax Invoicing</div>
+                                <div class="highlight-item"><i class="fa-solid fa-check text-primary"></i> Dedicated 24/7 Concierge</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <div class="about-image-wrapper">
+                                <img src="https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=700&auto=format&fit=crop&q=80" alt="About ManChi's" class="about-main-img">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. SHOP / PRODUCTS VIEW -->
+        <section id="shopView" class="view-section">
+            <div class="container">
+                <!-- Shop Header & Filters -->
+                <div class="shop-header">
+                    <div>
+                        <h2 class="shop-title" id="shopCatalogTitle">All Collections</h2>
+                        <p class="text-muted small mb-0" id="shopResultsCount">Showing all items</p>
+                    </div>
+
+                    <!-- Category and Deal Type Filters Bar -->
+                    <div class="shop-filters-bar">
+                        <!-- Category Filter Dropdown -->
+                        <div class="filter-group">
+                            <label><i class="fa-solid fa-filter"></i> Category:</label>
+                            <select id="filterCategory" class="form-select-sm" onchange="applyShopFilters()">
+                                <option value="all">All Categories</option>
+                                <option value="Women">Women</option>
+                                <option value="Men">Men</option>
+                                <option value="Accessories">Accessories</option>
+                                <option value="Beauty & Health">Beauty & Health</option>
+                            </select>
+                        </div>
+
+                        <!-- Deal Type Filter Dropdown -->
+                        <div class="filter-group">
+                            <label><i class="fa-solid fa-tag"></i> Deal Type:</label>
+                            <select id="filterDealType" class="form-select-sm" onchange="applyShopFilters()">
+                                <option value="all">All Deal Types</option>
+                                <option value="Casual">Casual</option>
+                                <option value="Ethnic">Ethnic</option>
+                                <option value="Festival">Festival</option>
+                                <option value="Special Deals">Special Deals</option>
+                                <option value="Combo Deals">Combo Deals</option>
+                            </select>
+                        </div>
+
+                        <!-- Sort Dropdown -->
+                        <div class="filter-group">
+                            <label><i class="fa-solid fa-arrow-down-wide-short"></i> Sort By:</label>
+                            <select id="filterSort" class="form-select-sm" onchange="applyShopFilters()">
+                                <option value="newest">Newest First</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="rating">Top Rated</option>
+                            </select>
+                        </div>
+
+                        <!-- Reset Filter Button -->
+                        <button class="btn btn-outline-sm" onclick="resetShopFilters()">
+                            <i class="fa-solid fa-rotate-left"></i> Reset
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Requirement 5: COMPACT PRODUCT CARD GRID -->
+                <div class="product-grid" id="shopProductGrid">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. COMBOS VIEW -->
+        <section id="combosView" class="view-section">
+            <div class="container">
+                <div class="section-header text-center">
+                    <span class="section-tag"><i class="fa-solid fa-layer-group"></i> CURATED BUNDLES</span>
+                    <h2 class="section-title">Special Combo Deals</h2>
+                    <p class="section-subtitle">Complete outfits and luxury matching bundles curated at massive combo savings</p>
+                </div>
+                <div class="combos-grid" id="catalogCombosGrid">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. MY ORDERS VIEW (Customer) -->
+        <section id="ordersView" class="view-section">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2>My Order History</h2>
+                        <p class="text-muted small mb-0">Track shipments, verify delivery dates, and download invoices with verified QR codes</p>
+                    </div>
+                    <button class="btn btn-outline" onclick="openTrackOrderModal()">
+                        <i class="fa-solid fa-location-crosshairs"></i> Track By Order ID
+                    </button>
+                </div>
+
+                <div id="userOrdersList" class="user-orders-container">
+                    <!-- Injected dynamically via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. ADMIN DASHBOARD VIEW (Admin Only) -->
+        <section id="adminView" class="view-section">
+            <div class="container">
+                <!-- Dashboard Header -->
+                <div class="admin-dashboard-header">
+                    <div>
+                        <h2 class="mb-1"><i class="fa-solid fa-chart-line text-primary"></i> Administrator Dashboard</h2>
+                        <p class="text-muted small mb-0">Manage products, deals, discount coupons, customer orders and live tracking</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary" onclick="openAddProductModal()">
+                            <i class="fa-solid fa-plus"></i> Add Product
+                        </button>
+                        <button class="btn btn-secondary" onclick="openAddCouponModal()">
+                            <i class="fa-solid fa-plus"></i> Create Coupon
+                        </button>
+                        <button class="btn btn-outline" onclick="openAddComboModal()">
+                            <i class="fa-solid fa-plus"></i> Add Combo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Admin Metrics Overview Cards -->
+                <div class="admin-stats-grid mb-4">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-pink"><i class="fa-solid fa-bag-shopping"></i></div>
+                        <div>
+                            <span class="stat-meta">Total Orders</span>
+                            <h3 class="stat-val" id="adminTotalOrdersCount">0</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-green"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                        <div>
+                            <span class="stat-meta">Total Revenue</span>
+                            <h3 class="stat-val" id="adminTotalRevenueVal">₹0</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-blue"><i class="fa-solid fa-shirt"></i></div>
+                        <div>
+                            <span class="stat-meta">Active Products</span>
+                            <h3 class="stat-val" id="adminActiveProductsCount">0</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-orange"><i class="fa-solid fa-ticket"></i></div>
+                        <div>
+                            <span class="stat-meta">Live Coupons</span>
+                            <h3 class="stat-val" id="adminLiveCouponsCount">0</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Tabs Navigation -->
+                <div class="admin-tabs">
+                    <button class="admin-tab active" id="tabBtnProducts" onclick="switchAdminTab('products')">
+                        <i class="fa-solid fa-shirt"></i> Products Inventory
+                    </button>
+                    <button class="admin-tab" id="tabBtnCombos" onclick="switchAdminTab('combos')">
+                        <i class="fa-solid fa-layer-group"></i> Combo Deals
+                    </button>
+                    <button class="admin-tab" id="tabBtnCoupons" onclick="switchAdminTab('coupons')">
+                        <i class="fa-solid fa-ticket"></i> Offers & Coupons
+                    </button>
+                    <button class="admin-tab" id="tabBtnOrders" onclick="switchAdminTab('orders')">
+                        <i class="fa-solid fa-truck-ramp-box"></i> Orders & Live Tracking
+                    </button>
+                    <button class="admin-tab" id="tabBtnUsers" onclick="switchAdminTab('users')">
+                        <i class="fa-solid fa-users"></i> Users & Reward Points
+                    </button>
+                </div>
+
+                <!-- Tab 1: Products Inventory -->
+                <div id="adminTabContentProducts" class="admin-tab-pane active">
+                    <div class="card p-3 shadow-sm border-0">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">Product Catalog Management</h5>
+                            <button class="btn btn-primary btn-sm" onclick="openAddProductModal()">
+                                <i class="fa-solid fa-plus"></i> New Product
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table align-middle admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Product Name</th>
+                                        <th>Category</th>
+                                        <th>Deal Type</th>
+                                        <th>Price</th>
+                                        <th>Stock</th>
+                                        <th>Status</th>
+                                        <th>Delivery Info</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminProductsTableBody">
+                                    <!-- Injected via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Combos -->
+                <div id="adminTabContentCombos" class="admin-tab-pane">
+                    <div class="card p-3 shadow-sm border-0">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">Combo Deals Management</h5>
+                            <button class="btn btn-primary btn-sm" onclick="openAddComboModal()">
+                                <i class="fa-solid fa-plus"></i> New Combo
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table align-middle admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Combo Title</th>
+                                        <th>Included Items</th>
+                                        <th>Price</th>
+                                        <th>Stock</th>
+                                        <th>Deal Type</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminCombosTableBody">
+                                    <!-- Injected via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Coupons -->
+                <div id="adminTabContentCoupons" class="admin-tab-pane">
+                    <div class="card p-3 shadow-sm border-0">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">Coupon & Discount System</h5>
+                            <button class="btn btn-primary btn-sm" onclick="openAddCouponModal()">
+                                <i class="fa-solid fa-plus"></i> Create New Coupon
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table align-middle admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Type</th>
+                                        <th>Discount</th>
+                                        <th>Min Order</th>
+                                        <th>Max Discount</th>
+                                        <th>Expiry Date</th>
+                                        <th>Status</th>
+                                        <th>Description</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminCouponsTableBody">
+                                    <!-- Injected via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 4: Orders & Tracking -->
+                <div id="adminTabContentOrders" class="admin-tab-pane">
+                    <div class="card p-3 shadow-sm border-0">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="mb-0">Order Tracking & Fulfillment</h5>
+                                <span class="text-muted small">Update status, modify tracking milestones and issue invoices</span>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table align-middle admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer</th>
+                                        <th>Amount</th>
+                                        <th>Payment</th>
+                                        <th>Order Date</th>
+                                        <th>Est. Delivery</th>
+                                        <th>Tracking Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminOrdersTableBody">
+                                    <!-- Injected via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 5: Users -->
+                <div id="adminTabContentUsers" class="admin-tab-pane">
+                    <div class="card p-3 shadow-sm border-0">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">Registered Shoppers & Loyalty Points</h5>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table align-middle admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Reward Points Balance</th>
+                                        <th>Member Since</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminUsersTableBody">
+                                    <!-- Injected via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================================== -->
+    <!-- MODALS & DRAWERS -->
+    <!-- ============================================================== -->
+
+    <!-- 1. CART DRAWER (Normal User Only) -->
+    <div id="cartDrawer" class="cart-drawer">
+        <div class="drawer-header">
+            <h4><i class="fa-solid fa-bag-shopping text-primary"></i> Shopping Bag (<span id="drawerCartCount">0</span>)</h4>
+            <button class="close-btn" onclick="toggleCartDrawer()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="drawer-body" id="cartDrawerBody">
+            <!-- Cart Items injected via JS -->
+        </div>
+        <div class="drawer-footer" id="cartDrawerFooter">
+            <div class="cart-summary-line">
+                <span>Subtotal:</span>
+                <span class="fw-bold" id="drawerSubtotalVal">₹0.00</span>
+            </div>
+            <div class="cart-summary-line small text-muted">
+                <span>Shipping:</span>
+                <span class="text-success fw-bold">FREE</span>
+            </div>
+            <div class="cart-summary-line small text-primary">
+                <span>Reward Points you will earn:</span>
+                <span class="fw-bold" id="drawerEarnPointsVal">+0 pts</span>
+            </div>
+            <button class="btn btn-primary btn-block mt-3" onclick="openCheckoutModal()">
+                Proceed to Checkout <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+    <div id="cartBackdrop" class="drawer-backdrop" onclick="toggleCartDrawer()"></div>
+
+    <!-- 2. CHECKOUT MODAL (User Only) -->
+    <div id="checkoutModal" class="modal-backdrop-custom d-none">
+        <div class="modal-dialog-custom modal-lg">
+            <div class="modal-content-custom">
+                <div class="modal-header-custom">
+                    <h4><i class="fa-solid fa-shield-check text-primary"></i> Secure Checkout</h4>
+                    <button class="modal-close" onclick="closeCheckoutModal()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="modal-body-custom">
+                    <div class="row g-4">
+                        <!-- Left: Customer & Shipping Details -->
+                        <div class="col-md-7">
+                            <h5 class="mb-3">Shipping & Customer Information</h5>
+                            <div class="form-group mb-2">
+                                <label>Full Name *</label>
+                                <input type="text" id="checkoutName" class="form-control" placeholder="e.g. Priya Sharma" required>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <label>Email Address *</label>
+                                    <input type="email" id="checkoutEmail" class="form-control" placeholder="priya@example.com" required>
+                                </div>
+                                <div class="col-6">
+                                    <label>Mobile Number (10 Digits) *</label>
+                                    <input type="tel" id="checkoutPhone" class="form-control" placeholder="10-digit mobile number" maxlength="10" pattern="[0-9]{10}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" required>
+                                    <small class="text-muted" style="font-size:0.75rem;">Must be exactly 10 digits</small>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Delivery Address *</label>
+                                <textarea id="checkoutAddress" class="form-control" rows="2" placeholder="House no, Street, Landmark, City, Pincode" required></textarea>
+                            </div>
+
+                            <h5 class="mb-2">Payment Method</h5>
+                            <div class="payment-options">
+                                <label class="payment-option-card">
+                                    <input type="radio" name="paymentMethod" value="Cash on Delivery" checked>
+                                    <div class="payment-meta">
+                                        <i class="fa-solid fa-hand-holding-dollar text-primary"></i>
+                                        <div>
+                                            <b>Cash on Delivery (COD)</b>
+                                            <p class="small text-muted mb-0">Pay upon package delivery at your doorstep</p>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label class="payment-option-card">
+                                    <input type="radio" name="paymentMethod" value="UPI / NetBanking">
+                                    <div class="payment-meta">
+                                        <i class="fa-solid fa-qrcode text-primary"></i>
+                                        <div>
+                                            <b>Instant UPI / NetBanking</b>
+                                            <p class="small text-muted mb-0">Google Pay, PhonePe, Paytm or Net Banking</p>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label class="payment-option-card">
+                                    <input type="radio" name="paymentMethod" value="Credit/Debit Card">
+                                    <div class="payment-meta">
+                                        <i class="fa-solid fa-credit-card text-primary"></i>
+                                        <div>
+                                            <b>Credit or Debit Card</b>
+                                            <p class="small text-muted mb-0">Visa, MasterCard, RuPay with 256-bit SSL</p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Right: Order Summary, Coupon & Rewards -->
+                        <div class="col-md-5">
+                            <div class="checkout-summary-box">
+                                <h5 class="mb-3">Order Summary</h5>
+
+                                <!-- Items mini list -->
+                                <div class="checkout-items-mini mb-3" id="checkoutItemsList">
+                                    <!-- Populated via JS -->
+                                </div>
+
+                                <!-- Coupon Code Input -->
+                                <div class="coupon-input-box mb-3">
+                                    <label class="small fw-bold">Have a Promo Coupon?</label>
+                                    <div class="input-group">
+                                        <input type="text" id="checkoutCouponInput" class="form-control" placeholder="Enter coupon code" style="text-transform: uppercase;">
+                                        <button class="btn btn-secondary btn-sm" id="applyCouponBtn" onclick="handleApplyCoupon()">Apply</button>
+                                        <button class="btn btn-outline-danger btn-sm d-none" id="removeCouponBtn" onclick="handleRemoveCoupon()">Remove</button>
+                                    </div>
+                                    <div id="couponFeedback" class="small mt-1"></div>
+                                </div>
+
+                                <!-- Reward Points Redemption -->
+                                <div class="reward-redemption-box mb-3" id="rewardRedemptionBox">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="useRewardsCheckbox" onchange="handleToggleRewards()">
+                                        <label class="form-check-label fw-bold small" for="useRewardsCheckbox">
+                                            <i class="fa-solid fa-award text-warning"></i> Redeem Reward Points
+                                        </label>
+                                    </div>
+                                    <p class="small text-muted mb-0 mt-1">
+                                        Available Balance: <b id="checkoutAvailablePoints">0</b> Points (1 Pt = ₹1 discount)
+                                    </p>
+                                    <div id="rewardsFeedback" class="small text-success mt-1 d-none"></div>
+                                </div>
+
+                                <!-- Totals Calculation Breakdown -->
+                                <div class="checkout-calc-lines">
+                                    <div class="calc-line">
+                                        <span>Subtotal:</span>
+                                        <span id="calcSubtotal">₹0.00</span>
+                                    </div>
+                                    <div class="calc-line text-success" id="calcCouponLine" style="display: none;">
+                                        <span>Coupon Discount (<span id="appliedCouponCode"></span>):</span>
+                                        <span id="calcDiscount">- ₹0.00</span>
+                                    </div>
+                                    <div class="calc-line text-success" id="calcPointsLine" style="display: none;">
+                                        <span>Reward Points Redeemed:</span>
+                                        <span id="calcPointsDiscount">- ₹0.00</span>
+                                    </div>
+                                    <div class="calc-line">
+                                        <span>Estimated Delivery:</span>
+                                        <span class="text-success fw-bold">FREE</span>
+                                    </div>
+                                    <hr class="my-2">
+                                    <div class="calc-line grand-total">
+                                        <span>Final Payable Amount:</span>
+                                        <span class="text-primary fw-bold" id="calcFinalTotal">₹0.00</span>
+                                    </div>
+                                </div>
+
+                                <div class="earning-points-banner mt-3">
+                                    <i class="fa-solid fa-sparkles text-primary"></i> You will earn <b id="calcEarnedPoints">0</b> reward points on this order!
+                                </div>
+
+                                <button class="btn btn-primary btn-block btn-lg mt-3" id="placeOrderBtn" onclick="submitOrder()">
+                                    <i class="fa-solid fa-lock"></i> Place Order Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. ORDER TRACKING & DETAILS MODAL -->
+    <div id="trackingModal" class="modal-backdrop-custom d-none">
+        <div class="modal-dialog-custom modal-lg">
+            <div class="modal-content-custom">
+                <div class="modal-header-custom">
+                    <div>
+                        <h4 class="mb-0"><i class="fa-solid fa-truck-fast text-primary"></i> Live Order Tracking</h4>
+                        <span class="text-muted small" id="trackModalOrderId">Order ID: -</span>
+                    </div>
+                    <button class="modal-close" onclick="closeTrackingModal()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="modal-body-custom">
+                    <!-- Delivery Info Header -->
+                    <div class="tracking-top-card">
+                        <div class="row align-items-center">
+                            <div class="col-md-7">
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <span class="badge badge-status" id="trackModalStatusBadge">Processing</span>
+                                    <span class="small text-muted" id="trackModalDate">Placed on: -</span>
+                                </div>
+                                <h5 class="mb-1 text-primary">Estimated Delivery: <b id="trackModalDeliveryDate">-</b></h5>
+                                <p class="small text-muted mb-0" id="trackModalAddress"><i class="fa-solid fa-location-dot"></i> Address: -</p>
+                            </div>
+                            <div class="col-md-5 text-md-end mt-3 mt-md-0">
+                                <a id="trackModalBillDownloadBtn" href="#" target="_blank" class="btn btn-outline btn-sm">
+                                    <i class="fa-solid fa-file-pdf text-danger"></i> Download PDF Bill (with QR)
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive QR Code Verification & Thank You Card -->
+                    <div class="order-qr-preview-box p-3 my-3 rounded" style="background: linear-gradient(135deg, #fff5f8, #fef0f4); border: 1px solid #ffd1dc;">
+                        <div class="d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <img id="trackModalQrImg" src="" alt="Order QR Code" style="width: 105px; height: 105px; border-radius: 8px; border: 1px solid #ffb6c1; background: #fff; padding: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                                <div>
+                                    <span class="badge bg-danger-subtle text-danger mb-1" style="font-size: 0.75rem;"><i class="fa-solid fa-qrcode"></i> Digital Order QR</span>
+                                    <h6 class="fw-bold mb-1 text-dark">Scan QR Code with Camera</h6>
+                                    <p class="small text-muted mb-0">Scan using any phone camera or QR scanner to view your <b>Thank You note</b> and verified order details.</p>
+                                </div>
+                            </div>
+                            <span class="badge bg-white text-primary border shadow-sm px-3 py-2 text-center" style="font-size: 0.8rem;">
+                                <i class="fa-solid fa-heart text-danger"></i> Thank you for shopping with ManChi's!
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Visual Step Progress Bar -->
+                    <div class="tracking-progress-wrapper my-4">
+                        <div class="tracking-steps" id="trackingStepsContainer">
+                            <!-- Injected dynamically via JS: Order Placed -> Order Confirmed -> Processing -> Packed -> Shipped -> Out for Delivery -> Delivered -->
+                        </div>
+                    </div>
+
+                    <!-- Items Summary & History Log Accordion -->
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card p-3 h-100 border-0 bg-light">
+                                <h6 class="fw-bold mb-2"><i class="fa-solid fa-clock-rotate-left text-primary"></i> Tracking Milestones</h6>
+                                <div class="tracking-history-timeline" id="trackingHistoryTimeline">
+                                    <!-- Injected via JS -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card p-3 h-100 border-0 bg-light">
+                                <h6 class="fw-bold mb-2"><i class="fa-solid fa-receipt text-primary"></i> Order Items & Cost</h6>
+                                <div id="trackModalItemsSummary" class="small mb-2"></div>
+                                <hr class="my-2">
+                                <div class="d-flex justify-content-between small">
+                                    <span>Payment Method:</span>
+                                    <b id="trackModalPaymentMethod">-</b>
+                                </div>
+                                <div class="d-flex justify-content-between small">
+                                    <span>Reward Points Earned:</span>
+                                    <b class="text-success" id="trackModalPointsEarned">+0 pts</b>
+                                </div>
+                                <div class="d-flex justify-content-between fw-bold text-primary mt-1">
+                                    <span>Final Total:</span>
+                                    <span id="trackModalFinalTotal">₹0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin Update Controls (Shown ONLY for Admin) -->
+                    <div id="adminTrackingControls" class="admin-tracking-box mt-3 d-none">
+                        <h6 class="fw-bold text-danger mb-2"><i class="fa-solid fa-shield-halved"></i> Admin Status Controls</h6>
+                        <div class="row g-2 align-items-center">
+                            <div class="col-md-5">
+                                <label class="small fw-bold">Update Current Stage:</label>
+                                <select id="adminStatusSelector" class="form-control form-control-sm">
+                                    <option value="Order Placed">Order Placed</option>
+                                    <option value="Order Confirmed">Order Confirmed</option>
+                                    <option value="Processing">Processing</option>
+                                    <option value="Packed">Packed</option>
+                                    <option value="Shipped">Shipped</option>
+                                    <option value="Out for Delivery">Out for Delivery</option>
+                                    <option value="Delivered">Delivered</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                            <div class="col-md-5">
+                                <label class="small fw-bold">Milestone Note (Optional):</label>
+                                <input type="text" id="adminStatusNote" class="form-control form-control-sm" placeholder="e.g. Package handed to BlueDart courier">
+                            </div>
+                            <div class="col-md-2 mt-4">
+                                <button class="btn btn-primary btn-sm btn-block" onclick="submitAdminStatusUpdate()">
+                                    Update
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. TRACK ORDER SEARCH MODAL -->
+    <div id="trackOrderSearchModal" class="modal-backdrop-custom d-none">
+        <div class="modal-dialog-custom modal-md">
+            <div class="modal-content-custom">
+                <div class="modal-header-custom">
+                    <h4><i class="fa-solid fa-magnifying-glass-location text-primary"></i> Track Your Order</h4>
+                    <button class="modal-close" onclick="closeTrackOrderSearchModal()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="modal-body-custom text-center py-4">
+                    <p class="text-muted">Enter your Order ID (found on your order confirmation or invoice) to check live status.</p>
+                    <div class="input-group mb-3">
+                        <input type="text" id="trackOrderIdInput" class="form-control" placeholder="e.g. MC-20261008-123456" style="text-transform: uppercase;">
+                        <button class="btn btn-primary" onclick="searchAndTrackOrder()">
+                            <i class="fa-solid fa-truck-fast"></i> Track
+                        </button>
+                    </div>
+                    <div id="quickRecentOrdersList" class="text-start mt-3">
+                        <!-- Populated if logged in -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. AUTH MODAL (Login & Register) -->
+    <div id="authModal" class="modal-backdrop-custom d-none">
+        <div class="modal-dialog-custom modal-md">
+            <div class="modal-content-custom">
+                <div class="modal-header-custom">
+                    <h4 id="authModalTitle">Welcome to ManChi's</h4>
+                    <button class="modal-close" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="modal-body-custom">
+                    <!-- Nav Tabs -->
+                    <div class="auth-tabs mb-4">
+                        <button class="auth-tab active" id="authTabLogin" onclick="switchAuthTab('login')">Sign In</button>
+                        <button class="auth-tab" id="authTabRegister" onclick="switchAuthTab('register')">Create Account</button>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+                        <div class="form-group mb-3">
+                            <label>Customer Email Address</label>
+                            <input type="email" id="loginEmail" class="form-control" placeholder="user@manchis.com" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Password</label>
+                            <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">Customer Sign In</button>
+                        <div class="auth-demo-hint mt-3">
+                            <small class="text-muted">
+                                <b>Customer Demo Login:</b> <code>user@manchis.com</code> / <code>user123</code><br/>
+                                <b>Store Administrator?</b> <a href="/admin" class="text-primary fw-bold"><i class="fa-solid fa-shield-halved"></i> Open Dedicated Admin Portal &rarr;</a>
+                            </small>
+                        </div>
+                    </form>
+
+                    <!-- Register Form -->
+                    <form id="registerForm" class="d-none" onsubmit="handleRegisterSubmit(event)">
+                        <div class="form-group mb-2">
+                            <label>Full Name</label>
+                            <input type="text" id="regName" class="form-control" placeholder="Priya Sharma" required>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label>Email Address</label>
+                            <input type="email" id="regEmail" class="form-control" placeholder="priya@example.com" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Password</label>
+                            <input type="password" id="regPassword" class="form-control" placeholder="Choose a password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">
+                            <i class="fa-solid fa-gift"></i> Register & Get 100 Reward Points
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. ADMIN PRODUCT ADD / EDIT MODAL -->
+    <div id="productAdminModal" class="modal-backdrop-custom d-none">
+        <div class="modal-dialog-custom modal-lg">
+            <div class="modal-content-custom">
+                <div class="modal-header-custom">
+                    <h4 id="productAdminModalTitle">Add New Product</h4>
+                    <button class="modal-close" onclick="closeProductAdminModal()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="modal-body-custom">
+                    <form id="productAdminForm" onsubmit="handleProductFormSubmit(event)">
+                        <input type="hidden" id="adminProdId" value="">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label>Product Name *</label>
+                                <input type="text" id="adminProdName" class="form-control" placeholder="e.g. Royal Rose Anarkali Kurta Set" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Category *</label>
+                                <select id="adminProdCategory" class="form-control" required>
+                                    <option value="Women">Women</option>
+                                    <option value="Men">Men</option>
+                                    <option value="Accessories">Accessories</option>
+                                    <option value="Beauty & Health">Beauty & Health</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Deal Type *</label>
+                                <select id="adminProdDealType" class="form-control" required>
+                                    <option value="Casual">Casual</option>
+                                    <option value="Ethnic">Ethnic</option>
+                                    <option value="Festival">Festival</option>
+                                    <option value="Special Deals">Special Deals</option>
+                                    <option value="Combo Deals">Combo Deals</option>
+                                    <option value="Regular">Regular</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Selling Price (₹) *</label>
+                                <input type="number" step="0.01" id="adminProdPrice" class="form-control" placeholder="1899" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Original / MRP Price (₹) *</label>
+                                <input type="number" step="0.01" id="adminProdOrigPrice" class="form-control" placeholder="2999" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Stock Quantity *</label>
+                                <input type="number" id="adminProdStock" class="form-control" placeholder="25" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Stock Status *</label>
+                                <select id="adminProdStatus" class="form-control" required>
+                                    <option value="In Stock">In Stock</option>
+                                    <option value="Low Stock">Low Stock</option>
+                                    <option value="Out of Stock">Out of Stock</option>
+                                    <option value="Inactive">Inactive / Hidden</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Delivery Information</label>
+                                <input type="text" id="adminProdDelivery" class="form-control" placeholder="Free delivery in 2-3 days">
+                            </div>
+                            <div class="col-12">
+                                <label>Product Image URL *</label>
+                                <input type="url" id="adminProdImage" class="form-control" placeholder="https://images.unsplash.com/photo-..." required>
+                            </div>
+                            <div class="col-12">
+                                <label>Description</label>
+                                <textarea id="adminProdDesc" class="form-control" rows="3" placeholder="Provide fabric details, styling tips, craftsmanship details..."></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer-custom mt-4">
+                            <button type="button" class="btn btn-outline" onclick="closeProductAdminModal()">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="adminSaveProdBtn">Save Product</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. ADMIN COUPON ADD / EDIT MODAL -->
+    <div id="couponAdminModal" class="modal-backdrop-custom d-none">
+        <div class="modal-dialog-custom modal-md">
+            <div class="modal-content-custom">
+                <div class="modal-header-custom">
+                    <h4 id="couponAdminModalTitle">Create Discount Coupon</h4>
+                    <button class="modal-close" onclick="closeCouponAdminModal()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="modal-body-custom">
+                    <form id="couponAdminForm" onsubmit="handleCouponFormSubmit(event)">
+                        <input type="hidden" id="adminCouponId" value="">
+                        <div class="form-group mb-2">
+                            <label>Coupon Code *</label>
+                            <input type="text" id="adminCouponCode" class="form-control" placeholder="e.g. FESTIVAL50" style="text-transform: uppercase;" required>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <label>Discount Type *</label>
+                                <select id="adminCouponType" class="form-control" required>
+                                    <option value="percentage">Percentage (%)</option>
+                                    <option value="fixed">Fixed Amount (₹)</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label>Discount Value *</label>
+                                <input type="number" step="0.01" id="adminCouponValue" class="form-control" placeholder="e.g. 20 or 150" required>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <label>Min Order Amount (₹)</label>
+                                <input type="number" step="0.01" id="adminCouponMin" class="form-control" placeholder="0">
+                            </div>
+                            <div class="col-6">
+                                <label>Max Discount Cap (₹)</label>
+                                <input type="number" step="0.01" id="adminCouponMax" class="form-control" placeholder="0 (no limit)">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <label>Expiry Date</label>
+                                <input type="date" id="adminCouponExpiry" class="form-control">
+                            </div>
+                            <div class="col-6">
+                                <label>Status</label>
+                                <select id="adminCouponActive" class="form-control">
+                                    <option value="1">Active</option>
+                                    <option value="0">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Description / Public Banner Text</label>
+                            <input type="text" id="adminCouponDesc" class="form-control" placeholder="e.g. 50% OFF Festive Mega Sale">
+                        </div>
+                        <div class="modal-footer-custom">
+                            <button type="button" class="btn btn-outline" onclick="closeCouponAdminModal()">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="adminSaveCouponBtn">Save Coupon</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. ADMIN COMBO ADD MODAL -->
+    <div id="comboAdminModal" class="modal-backdrop-custom d-none">
+        <div class="modal-dialog-custom modal-md">
+            <div class="modal-content-custom">
+                <div class="modal-header-custom">
+                    <h4>Add New Combo Deal</h4>
+                    <button class="modal-close" onclick="closeComboAdminModal()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="modal-body-custom">
+                    <form id="comboAdminForm" onsubmit="handleComboFormSubmit(event)">
+                        <div class="form-group mb-2">
+                            <label>Combo Title *</label>
+                            <input type="text" id="adminComboName" class="form-control" placeholder="e.g. Royal Festive Ethnic Combo" required>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label>Included Items *</label>
+                            <input type="text" id="adminComboItems" class="form-control" placeholder="e.g. Anarkali Kurta + Kundan Jhumkas + Potli Bag" required>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <label>Combo Price (₹) *</label>
+                                <input type="number" step="0.01" id="adminComboPrice" class="form-control" placeholder="2499" required>
+                            </div>
+                            <div class="col-6">
+                                <label>Original Value (₹) *</label>
+                                <input type="number" step="0.01" id="adminComboOrigPrice" class="form-control" placeholder="4299" required>
+                            </div>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label>Image URL *</label>
+                            <input type="url" id="adminComboImage" class="form-control" placeholder="https://images.unsplash.com/..." required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Description</label>
+                            <textarea id="adminComboDesc" class="form-control" rows="2" placeholder="Full look styled together at a special discounted package"></textarea>
+                        </div>
+                        <div class="modal-footer-custom">
+                            <button type="button" class="btn btn-outline" onclick="closeComboAdminModal()">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Combo</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. PRODUCT QUICK VIEW MODAL -->
+    <div id="productQuickViewModal" class="modal-backdrop-custom d-none">
+        <div class="modal-dialog-custom modal-lg">
+            <div class="modal-content-custom">
+                <div class="modal-header-custom">
+                    <h5 class="mb-0 text-muted">Product Quickview</h5>
+                    <button class="modal-close" onclick="closeQuickViewModal()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="modal-body-custom" id="quickViewModalBody">
+                    <!-- Injected dynamically via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Footer -->
+    <footer class="main-footer">
+        <div class="container footer-content">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="footer-brand">
+                        <img src="ManChi's Logo.png" alt="ManChi's Logo" class="footer-logo mb-2">
+                        <p class="footer-desc">
+                            ManChi's is your premier luxury fashion destination offering artisanal ethnic collections, contemporary casuals, designer accessories, and botanical beauty products.
+                        </p>
+                        <div class="footer-socials">
+                            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                            <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                            <a href="#"><i class="fa-brands fa-pinterest"></i></a>
+                            <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-6">
+                    <h6 class="footer-title">Shop Categories</h6>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="filterByCategory('Women'); return false;">Women's Fashion</a></li>
+                        <li><a href="#" onclick="filterByCategory('Men'); return false;">Men's Fashion</a></li>
+                        <li><a href="#" onclick="filterByCategory('Accessories'); return false;">Jewelry & Accessories</a></li>
+                        <li><a href="#" onclick="filterByCategory('Beauty & Health'); return false;">Beauty & Skincare</a></li>
+                        <li><a href="#" onclick="navigateTo('combos'); return false;">Combo Sets</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 col-6">
+                    <h6 class="footer-title">Deal Types</h6>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="filterByDealType('Casual'); return false;">Casual Everyday</a></li>
+                        <li><a href="#" onclick="filterByDealType('Ethnic'); return false;">Heritage Ethnic</a></li>
+                        <li><a href="#" onclick="filterByDealType('Festival'); return false;">Festival Special</a></li>
+                        <li><a href="#" onclick="filterByDealType('Special Deals'); return false;">Special Flash Deals</a></li>
+                        <li><a href="#" onclick="filterByDealType('Combo Deals'); return false;">Curated Combos</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="footer-title">Order Tracking & Customer Support</h6>
+                    <p class="small text-muted mb-2">Track any parcel using your Order ID or contact our concierge.</p>
+                    <button class="btn btn-outline btn-sm mb-3" onclick="openTrackOrderModal()">
+                        <i class="fa-solid fa-location-dot"></i> Open Live Tracker
+                    </button>
+                    <div class="footer-contact-info small text-muted">
+                        <p class="mb-1"><i class="fa-solid fa-envelope text-primary"></i> care@manchis.com</p>
+                        <p class="mb-1"><i class="fa-solid fa-phone text-primary"></i> +91 98765 43210 (10 AM - 8 PM)</p>
+                        <p class="mb-0"><i class="fa-solid fa-qrcode text-primary"></i> All invoices include official QR code</p>
+                    </div>
+                </div>
+            </div>
+            <hr class="footer-divider">
+            <div class="footer-bottom d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <p class="mb-0 small text-muted">&copy; 2026 ManChi's Fashion & Lifestyle. All Rights Reserved.</p>
+                <div class="payment-badges small text-muted">
+                    <i class="fa-brands fa-cc-visa fa-lg me-2"></i>
+                    <i class="fa-brands fa-cc-mastercard fa-lg me-2"></i>
+                    <i class="fa-solid fa-qrcode fa-lg me-2"></i> UPI & NetBanking
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Frontend Logic -->
+    <script src="script.js"></script>
+</body>
+</html>
